@@ -1,10 +1,8 @@
 import { defineConfig } from 'tsup';
 
 export default defineConfig({
-  entry: ['src/index.ts'],
-  format: ['esm', 'cjs'],
-  dts: true,
-  sourcemap: true,
+  entry: ['src/index.ts', 'src/commands/*.ts'],
+  format: ['esm'],
   clean: true,
   target: 'node20',
 });
