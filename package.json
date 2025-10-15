@@ -26,15 +26,11 @@
   },
   "scripts": {
     "build": "tsup",
+    "dev": "./bin/dev.js",
     "format": "prettier -w .",
     "lint": "prettier -c .",
-    "test": "tsc --noEmit"
-  },
-  "oclif": {
-    "bin": "shadcn-installer",
-    "commands": "./dist/commands",
-    "dirname": "shadcn-installer",
-    "topicSeparator": " "
+    "test": "tsc --noEmit",
+    "watch": "tsup --watch"
   },
   "dependencies": {
     "@oclif/core": "^4.5.6"
