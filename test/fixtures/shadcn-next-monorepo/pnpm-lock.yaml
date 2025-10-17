@@ -128,6 +128,9 @@ importers:
       react-dom:
         specifier: ^19.1.1
         version: 19.1.1(react@19.1.1)
+      shadcn-installer:
+        specifier: link:../../../../..
+        version: link:../../../../..
       tailwind-merge:
         specifier: ^3.3.1
         version: 3.3.1
