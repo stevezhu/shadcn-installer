@@ -20,7 +20,7 @@ importers:
         version: 0.1.0
       '@types/node':
         specifier: ^22.0.0
-        version: 22.18.10
+        version: 22.18.11
       prettier:
         specifier: ^3.6.2
         version: 3.6.2
@@ -29,7 +29,7 @@ importers:
         version: 2.5.19(prettier@3.6.2)
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@types/node@22.18.10)(typescript@5.9.3)
+        version: 10.9.2(@types/node@22.18.11)(typescript@5.9.3)
       tsup:
         specifier: ^8.5.0
         version: 8.5.0(typescript@5.9.3)
@@ -378,8 +378,8 @@ packages:
   '@types/estree@1.0.8':
     resolution: {integrity: sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==}
 
-  '@types/node@22.18.10':
-    resolution: {integrity: sha512-anNG/V/Efn/YZY4pRzbACnKxNKoBng2VTFydVu8RRs5hQjikP8CQfaeAV59VFSCzKNp90mXiVXW2QzV56rwMrg==}
+  '@types/node@22.18.11':
+    resolution: {integrity: sha512-Gd33J2XIrXurb+eT2ktze3rJAfAp9ZNjlBdh4SVgyrKEOADwCbdUDaK7QgJno8Ue4kcajscsKqu6n8OBG3hhCQ==}
 
   acorn-walk@8.3.4:
     resolution: {integrity: sha512-ueEepnujpqee2o5aIYnvHU6C0A42MNdsIDeqy5BydrkuC5R1ZuUFnm27EeFJGoEHJQgn3uleRvmTXaJgfXbt4g==}
@@ -1113,7 +1113,7 @@ snapshots:
 
   '@types/estree@1.0.8': {}
 
-  '@types/node@22.18.10':
+  '@types/node@22.18.11':
     dependencies:
       undici-types: 6.21.0
 
@@ -1506,14 +1506,14 @@ snapshots:
 
   ts-interface-checker@0.1.13: {}
 
-  ts-node@10.9.2(@types/node@22.18.10)(typescript@5.9.3):
+  ts-node@10.9.2(@types/node@22.18.11)(typescript@5.9.3):
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
       '@tsconfig/node10': 1.0.11
       '@tsconfig/node12': 1.0.11
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.4
-      '@types/node': 22.18.10
+      '@types/node': 22.18.11
       acorn: 8.15.0
       acorn-walk: 8.3.4
       arg: 4.1.3
