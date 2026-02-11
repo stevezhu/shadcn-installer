@@ -2,39 +2,59 @@ import path from 'node:path';
 
 import fs from 'fs-extra';
 import { Project } from 'ts-morph';
+import type { ImportDeclaration } from 'ts-morph';
 
 import type { Config, RegistryItem } from '../registry/schema.js';
 import { logger } from '../utils/logger.js';
 import type { WorkspaceDependency } from '../workspace/dependency-resolver.js';
 
-export async function writeComponentFiles(
+export const writeComponentFiles = async (
   item: RegistryItem,
+
   config: Config,
+
   workspaceDeps: WorkspaceDependency[],
+
   options: { overwrite?: boolean } = {},
-) {
-  if (!item.files) {return;}
-
-  for (const file of item.files) {
-    if (!file.content) {continue;}
-
-    const targetPath = resolveTargetPath(file.path, item.type, config);
-    const absolutePath = path.join(config.resolvedPaths.cwd, targetPath);
-
-    if ((await fs.pathExists(absolutePath)) && !options.overwrite) {
-      logger.warn(`Skipping ${targetPath} (already exists)`);
-      continue;
-    }
-
-    let {content} = file;
-    content = transformImports(content, workspaceDeps, config);
-
-    await fs.ensureDir(path.dirname(absolutePath));
-    await fs.writeFile(absolutePath, content);
+) => {
+  for (const file of item.files ?? []) {
+    await processFile(file, item.type, config, workspaceDeps, options);
   }
-}
+};
 
-function resolveTargetPath(filePath: string, type: string, config: Config): string {
+const processFile = async (
+  file: { path: string; content?: string },
+
+  itemType: string,
+
+  config: Config,
+
+  workspaceDeps: WorkspaceDependency[],
+
+  options: { overwrite?: boolean },
+) => {
+  if (file.content === undefined || file.content === null || file.content === '') {
+    return;
+  }
+
+  const targetPath = resolveTargetPath(file.path, itemType, config);
+
+  const absolutePath = path.join(config.resolvedPaths.cwd, targetPath);
+
+  if ((await fs.pathExists(absolutePath)) && options.overwrite !== true) {
+    logger.warn(`Skipping ${targetPath} (already exists)`);
+
+    return;
+  }
+
+  const content = transformImports(file.content, workspaceDeps, config);
+
+  await fs.ensureDir(path.dirname(absolutePath));
+
+  await fs.writeFile(absolutePath, content);
+};
+
+const resolveTargetPath = (filePath: string, type: string, config: Config): string => {
   let baseDir: string;
   if (type === 'registry:ui') {
     baseDir = config.resolvedPaths.ui;
@@ -48,52 +68,49 @@ function resolveTargetPath(filePath: string, type: string, config: Config): stri
 
   const absoluteTarget = path.join(baseDir, filePath);
   return path.relative(config.resolvedPaths.cwd, absoluteTarget);
-}
+};
 
-function transformImports(
+const transformImports = (
   content: string,
   workspaceDeps: WorkspaceDependency[],
   _config: Config,
-): string {
-  const project = new Project({
-    useInMemoryFileSystem: true,
-  });
+): string => {
+  const project = new Project({ useInMemoryFileSystem: true });
   const sourceFile = project.createSourceFile('temp.tsx', content);
 
-  const importDeclarations = sourceFile.getImportDeclarations();
-
-  for (const importDecl of importDeclarations) {
-    const moduleSpecifier = importDecl.getModuleSpecifierValue();
-
-    // Check if this import matches any of our workspace dependencies
-    for (const dep of workspaceDeps) {
-      // Very simple matching: if the import path contains the dependency name
-      // and looks like an alias import.
-      // E.g. "@/components/ui/button" matching dep.name === "button"
-      if (
-        (moduleSpecifier.startsWith('@/') || moduleSpecifier.startsWith('registry/')) &&
-        moduleSpecifier.endsWith(dep.name)
-      ) {
-        // We need to determine the internal path.
-        // For now, let's assume a standard structure.
-        // In a real scenario, we might want to store more info in the manifest.
-        let internalPath = '';
-        if (moduleSpecifier.includes('/components/ui/')) {
-          internalPath = 'components/ui/' + dep.name;
-        } else if (moduleSpecifier.includes('/hooks/')) {
-          internalPath = 'hooks/' + dep.name;
-        } else if (moduleSpecifier.includes('/lib/')) {
-          internalPath = 'lib/' + dep.name;
-        } else {
-          // Fallback to the same path but with @workspace prefix
-          internalPath = moduleSpecifier.replace(/^(@\/|registry\/)/, '');
-        }
-
-        importDecl.setModuleSpecifier(`@workspace/${dep.package}/${internalPath}`);
-      }
-    }
+  for (const importDecl of sourceFile.getImportDeclarations()) {
+    updateImportSpecifier(importDecl, workspaceDeps);
   }
 
-  const transformed = sourceFile.getFullText();
-  return transformed;
-}
+  return sourceFile.getFullText();
+};
+
+const updateImportSpecifier = (
+  importDecl: ImportDeclaration,
+  workspaceDeps: WorkspaceDependency[],
+) => {
+  const moduleSpecifier = importDecl.getModuleSpecifierValue();
+
+  for (const dep of workspaceDeps) {
+    if (
+      (moduleSpecifier.startsWith('@/') || moduleSpecifier.startsWith('registry/')) &&
+      moduleSpecifier.endsWith(dep.name)
+    ) {
+      const internalPath = resolveInternalPath(moduleSpecifier, dep.name);
+      importDecl.setModuleSpecifier(`@workspace/${dep.package}/${internalPath}`);
+    }
+  }
+};
+
+const resolveInternalPath = (moduleSpecifier: string, depName: string): string => {
+  if (moduleSpecifier.includes('/components/ui/')) {
+    return `components/ui/${depName}`;
+  }
+  if (moduleSpecifier.includes('/hooks/')) {
+    return `hooks/${depName}`;
+  }
+  if (moduleSpecifier.includes('/lib/')) {
+    return `lib/${depName}`;
+  }
+  return moduleSpecifier.replace(/^(@\/|registry\/)/, '');
+};

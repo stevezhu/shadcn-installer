@@ -5,11 +5,12 @@ import { ComponentNotFoundError } from '../errors/index.js';
 import { registryItemSchema } from './schema.js';
 import type { RegistryItem } from './schema.js';
 
-const registryCache = new Map<string, Promise<any>>();
+const registryCache = new Map<string, Promise<unknown>>();
 
-export async function fetchRegistryItem(url: string): Promise<RegistryItem> {
-  if (registryCache.has(url)) {
-    return registryCache.get(url)!;
+export const fetchRegistryItem =  async (url: string): Promise<RegistryItem> => {
+  const cached = registryCache.get(url);
+  if (cached !== undefined) {
+    return cached as Promise<RegistryItem>;
   }
 
   const fetchPromise = (async () => {
@@ -22,7 +23,7 @@ export async function fetchRegistryItem(url: string): Promise<RegistryItem> {
       throw new Error(`Failed to fetch registry item from ${url}: ${response.statusText}`);
     }
 
-    const json = await response.json();
+    const json = (await response.json()) as unknown;
     if (!Value.Check(registryItemSchema, json)) {
       throw new Error(`Invalid registry item from ${url}`);
     }
@@ -32,4 +33,4 @@ export async function fetchRegistryItem(url: string): Promise<RegistryItem> {
 
   registryCache.set(url, fetchPromise);
   return fetchPromise;
-}
+};

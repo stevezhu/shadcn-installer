@@ -8,16 +8,18 @@ const BUILTIN_REGISTRIES: Record<string, string> = {
   '@shadcn': 'https://ui.shadcn.com/r/{name}.json',
 };
 
-export async function resolveRegistryTree(
+export const resolveRegistryTree = async (
   names: string[],
   config: Config,
-): Promise<RegistryItem[]> {
+): Promise<RegistryItem[]> => {
   const registryItems: RegistryItem[] = [];
   const visited = new Set<string>();
   const stack = new Set<string>();
 
-  async function resolve(name: string) {
-    if (visited.has(name)) {return;}
+  const resolve = async (name: string) => {
+    if (visited.has(name)) {
+      return;
+    }
     if (stack.has(name)) {
       throw new CircularDependencyError([...stack, name]);
     }
@@ -26,36 +28,34 @@ export async function resolveRegistryTree(
     const item = await fetchItem(name, config);
     registryItems.push(item);
 
-    if (item.registryDependencies) {
-      for (const dep of item.registryDependencies) {
-        await resolve(dep);
-      }
+    for (const dep of item.registryDependencies ?? []) {
+      await resolve(dep);
     }
 
     stack.delete(name);
     visited.add(name);
-  }
+  };
 
   for (const name of names) {
     await resolve(name);
   }
 
   return registryItems;
-}
+};
 
-async function fetchItem(name: string, config: Config): Promise<RegistryItem> {
+const fetchItem =  async (name: string, config: Config): Promise<RegistryItem> => {
   const { registry, item } = parseRegistryItem(name);
   const registries = { ...BUILTIN_REGISTRIES, ...config.registries };
   const registryKey: string =
     registry === 'default' || registry === null || registry === undefined ? '@shadcn' : registry;
   const registryConfig = registries[registryKey as keyof typeof registries];
 
-  if (!registryConfig) {
+  if (registryConfig === undefined) {
     throw new RegistryNotConfiguredError(registry ?? 'unknown');
   }
 
   const baseUrl = typeof registryConfig === 'string' ? registryConfig : registryConfig.url;
   const url = baseUrl.replace('{name}', item).replace('{style}', config.style);
 
-  return  fetchRegistryItem(url);
-}
+  return fetchRegistryItem(url);
+};

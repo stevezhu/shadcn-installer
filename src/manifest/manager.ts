@@ -21,7 +21,7 @@ export class ManifestManager {
     }
 
     try {
-      const data = await fs.readJson(this.manifestPath);
+      const data = (await fs.readJson(this.manifestPath)) as unknown;
       if (Value.Check(manifestSchema, data)) {
         return data;
       }

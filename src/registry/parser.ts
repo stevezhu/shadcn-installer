@@ -1,4 +1,4 @@
-export function parseRegistryItem(name: string) {
+export const parseRegistryItem = (name: string) => {
   if (name.startsWith('@')) {
     const parts = name.split('/');
     if (parts.length > 1) {
@@ -13,4 +13,4 @@ export function parseRegistryItem(name: string) {
     item: name,
     registry: null,
   };
-}
+};

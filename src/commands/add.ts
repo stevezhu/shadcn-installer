@@ -13,21 +13,21 @@ export default class Add extends Command {
 
   static override flags = {
     cwd: Flags.string({
-      description: 'Working directory',
       default: process.cwd(),
+      description: 'Working directory',
     }),
     'no-install': Flags.boolean({
-      description: 'Skip dependency installation',
       default: false,
+      description: 'Skip dependency installation',
     }),
     overwrite: Flags.boolean({
-      description: 'Overwrite existing files',
       default: false,
+      description: 'Overwrite existing files',
     }),
     yes: Flags.boolean({
       char: 'y',
-      description: 'Skip confirmation prompts',
       default: false,
+      description: 'Skip confirmation prompts',
     }),
   };
 
@@ -42,7 +42,7 @@ export default class Add extends Command {
 
   public async run(): Promise<void> {
     const { argv, flags } = await this.parse(Add);
-    const components = argv as string[];
+    const components = argv as unknown as string[];
 
     try {
       await installComponents(components, {

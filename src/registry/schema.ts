@@ -11,7 +11,8 @@ export const registryConfigItemSchema = Type.Union([
 ]);
 
 export const registryConfigSchema = Type.Record(
-  Type.String(), // Should start with @
+  // Should start with @
+  Type.String(),
   registryConfigItemSchema,
 );
 
@@ -19,10 +20,10 @@ export const rawConfigSchema = Type.Object({
   $schema: Type.Optional(Type.String()),
   aliases: Type.Object({
     components: Type.String(),
-    utils: Type.String(),
-    ui: Type.Optional(Type.String()),
-    lib: Type.Optional(Type.String()),
     hooks: Type.Optional(Type.String()),
+    lib: Type.Optional(Type.String()),
+    ui: Type.Optional(Type.String()),
+    utils: Type.String(),
   }),
   iconLibrary: Type.Optional(Type.String()),
   menuAccent: Type.Optional(
@@ -40,9 +41,9 @@ export const rawConfigSchema = Type.Object({
   rtl: Type.Optional(Type.Boolean({ default: false })),
   style: Type.String(),
   tailwind: Type.Object({
+    baseColor: Type.String(),
     config: Type.Optional(Type.String()),
     css: Type.String(),
-    baseColor: Type.String(),
     cssVariables: Type.Optional(Type.Boolean({ default: true })),
     prefix: Type.Optional(Type.String()),
   }),

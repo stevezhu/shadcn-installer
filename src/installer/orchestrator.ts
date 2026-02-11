@@ -21,7 +21,7 @@ export interface InstallOptions {
   install?: boolean;
 }
 
-export async function installComponents(names: string[], options: InstallOptions) {
+export const installComponents = async (names: string[], options: InstallOptions) => {
   const { cwd } = options;
   const spinner = createSpinner('Detecting workspace...').start();
 
@@ -32,26 +32,54 @@ export async function installComponents(names: string[], options: InstallOptions
   }
 
   const config = await getConfig(cwd);
-  if (!config) {
+  if (config === null) {
     spinner.fail();
     throw new Error("Config not found. Please run 'shadcn init' first.");
   }
 
-  const currentPkgInfo = await getPackageInfo(cwd);
+  const currentPkgInfo = (await getPackageInfo(cwd)) as { name?: string } | null;
   const currentPkgName = currentPkgInfo?.name;
 
   const manifestManager = new ManifestManager(workspace.root);
   spinner.text = 'Resolving components...';
 
-  const resolvedTree = await resolveRegistryTree(names, config);
-  const workspaceDeps = await resolveWorkspaceDependencies(
+  const resolvedTree: RegistryItem[] = await resolveRegistryTree(names, config);
+  const workspaceDeps: WorkspaceDependency[] = await resolveWorkspaceDependencies(
     resolvedTree,
     manifestManager,
-    currentPkgName,
+    currentPkgName ?? 'unknown',
   );
 
   spinner.succeed('Components resolved.');
 
+  await performInstallation(
+    resolvedTree,
+    config,
+    workspaceDeps,
+    manifestManager,
+    currentPkgName,
+    options,
+  );
+
+  if (workspaceDeps.length > 0) {
+    await updateWorkspaceDeps(cwd, workspaceDeps);
+  }
+
+  if (options.install !== false) {
+    await runInstall(workspace.root);
+  }
+
+  logger.success('\nInstallation complete!');
+};
+
+const performInstallation = async (
+  resolvedTree: RegistryItem[],
+  config: Config,
+  workspaceDeps: WorkspaceDependency[],
+  manifestManager: ManifestManager,
+  currentPkgName: string | undefined,
+  options: InstallOptions,
+) => {
   for (const item of resolvedTree) {
     const itemSpinner = createSpinner(`Installing ${item.name}...`).start();
 
@@ -61,40 +89,38 @@ export async function installComponents(names: string[], options: InstallOptions
 
     await updateConfig(item, config);
 
-    // Update manifest
     const parsed = parseRegistryItem(item.name);
-    const firstRegistryKey = config.registries ? Object.keys(config.registries)[0] : undefined;
+    const {registries} = config;
+    const firstRegistryKey = registries ? Object.keys(registries)[0] : undefined;
     const defaultRegistry = firstRegistryKey ?? '@shadcn';
 
     await manifestManager.addComponent(item.name, {
       installedAt: new Date().toISOString(),
       package: currentPkgName ?? 'unknown',
-      path: cwd,
+      path: options.cwd,
       registry: parsed.registry ?? defaultRegistry,
     });
 
     itemSpinner.succeed(`Installed ${item.name}.`);
   }
+};
 
-  if (workspaceDeps.length > 0) {
-    const depSpinner = createSpinner('Updating workspace dependencies...').start();
-    const deps: Record<string, string> = {};
-    for (const dep of workspaceDeps) {
-      deps[dep.package] = 'workspace:*';
-    }
-    await addWorkspaceDependencies(cwd, deps);
-    depSpinner.succeed('Workspace dependencies updated.');
+const updateWorkspaceDeps = async (cwd: string, workspaceDeps: WorkspaceDependency[]) => {
+  const depSpinner = createSpinner('Updating workspace dependencies...').start();
+  const deps: Record<string, string> = {};
+  for (const dep of workspaceDeps) {
+    deps[dep.package] = 'workspace:*';
   }
+  await addWorkspaceDependencies(cwd, deps);
+  depSpinner.succeed('Workspace dependencies updated.');
+};
 
-  if (options.install !== false) {
-    const installSpinner = createSpinner('Installing dependencies...').start();
-    try {
-      await execa('pnpm', ['install'], { cwd: workspace.root });
-      installSpinner.succeed('Dependencies installed.');
-    } catch {
-      installSpinner.fail('Failed to install dependencies.');
-    }
+const runInstall = async (root: string) => {
+  const installSpinner = createSpinner('Installing dependencies...').start();
+  try {
+    await execa('pnpm', ['install'], { cwd: root });
+    installSpinner.succeed('Dependencies installed.');
+  } catch {
+    installSpinner.fail('Failed to install dependencies.');
   }
-
-  logger.success('\nInstallation complete!');
-}
+};
