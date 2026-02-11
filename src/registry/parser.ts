@@ -1,16 +1,16 @@
 export function parseRegistryItem(name: string) {
-  if (name.startsWith("@")) {
-    const parts = name.split("/")
+  if (name.startsWith('@')) {
+    const parts = name.split('/');
     if (parts.length > 1) {
       return {
+        item: parts.slice(1).join('/'),
         registry: parts[0],
-        item: parts.slice(1).join("/"),
-      }
+      };
     }
   }
 
   return {
-    registry: null,
     item: name,
-  }
+    registry: null,
+  };
 }
