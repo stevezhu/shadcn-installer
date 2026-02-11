@@ -1,7 +1,7 @@
 import path from "node:path"
 import fs from "fs-extra"
 import { Value } from "typebox/value"
-import { configSchema, type Config, type RawConfig, rawConfigSchema } from "../registry/schema.js"
+import { type Config, type RawConfig, rawConfigSchema } from "../registry/schema.js"
 
 export async function getConfig(cwd: string): Promise<Config | null> {
   const configPath = await findConfig(cwd)

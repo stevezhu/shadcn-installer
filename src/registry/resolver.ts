@@ -45,10 +45,11 @@ export async function resolveRegistryTree(
 async function fetchItem(name: string, config: Config): Promise<RegistryItem> {
   const { registry, item } = parseRegistryItem(name)
   const registries = { ...BUILTIN_REGISTRIES, ...config.registries }
-  const registryConfig = registries[registry === "default" ? "@shadcn" : registry]
+  const registryKey: string = (registry === "default" || registry === null || registry === undefined) ? "@shadcn" : registry
+  const registryConfig = registries[registryKey as keyof typeof registries]
 
   if (!registryConfig) {
-    throw new RegistryNotConfiguredError(registry)
+    throw new RegistryNotConfiguredError(registry || "unknown")
   }
 
   const baseUrl = typeof registryConfig === "string" ? registryConfig : registryConfig.url

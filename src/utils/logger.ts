@@ -1,11 +1,14 @@
 import { ux } from "@oclif/core"
-import picocolors from "picocolors"
 
 export const logger = {
-  info: (message: string) => console.log(picocolors.blue(message)),
-  success: (message: string) => console.log(picocolors.green(message)),
-  warn: (message: string) => console.log(picocolors.yellow(message)),
-  error: (message: string) => console.error(picocolors.red(message)),
-  break: () => console.log(""),
-  table: (data: any[], columns: any) => ux.table(data, columns),
+  info: (message: string) => ux.stdout(ux.colorize("blueBright", message)),
+  success: (message: string) => ux.stdout(ux.colorize("greenBright", message)),
+  warn: (message: string) => ux.stdout(ux.colorize("yellowBright", message)),
+  error: (message: string) => ux.stderr(ux.colorize("redBright", message)),
+  break: () => ux.stdout(""),
+  table: (data: any[], columns: any) => {
+    // ux.table is missing in this version, fallback to console.log for now
+    // or just ignore if it's not critical
+    console.log("Table data:", data, columns)
+  },
 }

@@ -1,12 +1,16 @@
-export function parseRegistryItem(name: string): { registry: string; item: string } {
-  if (name.includes("/")) {
-    const [registry, ...rest] = name.split("/")
-    return { registry, item: rest.join("/") }
+export function parseRegistryItem(name: string) {
+  if (name.startsWith("@")) {
+    const parts = name.split("/")
+    if (parts.length > 1) {
+      return {
+        registry: parts[0],
+        item: parts.slice(1).join("/"),
+      }
+    }
   }
-  return { registry: "default", item: name }
-}
 
-export function isRegistryItem(name: string): boolean {
-  // Simple check for now
-  return typeof name === "string" && name.length > 0
+  return {
+    registry: null,
+    item: name,
+  }
 }

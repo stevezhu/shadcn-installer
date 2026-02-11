@@ -63,10 +63,10 @@ async function findWorkspacePackages(
   if (type === "pnpm") {
     const yaml = await fs.readFile(path.join(root, "pnpm-workspace.yaml"), "utf8")
     const match = yaml.match(/packages:\s*\n((\s*-\s*['"]?.*['"]?\n?)+)/)
-    if (match) {
+    if (match && match[1]) {
       patterns = match[1]
         .split("\n")
-        .map((line) => line.trim().replace(/^-\s*['"]?|['"]?$/g, ""))
+        .map((line: string) => line.trim().replace(/^-\s*['"]?|['"]?$/g, ""))
         .filter(Boolean)
     }
   } else {

@@ -5,6 +5,7 @@ import { resolveRegistryTree } from "../registry/resolver.js"
 import { resolveWorkspaceDependencies } from "../workspace/dependency-resolver.js"
 import { writeComponentFiles } from "./file-writer.js"
 import { updateConfig } from "./config-updater.js"
+import { parseRegistryItem } from "../registry/parser.js"
 import { addWorkspaceDependencies, getPackageInfo } from "../utils/package-json.js"
 import { createSpinner } from "../utils/spinner.js"
 import { WorkspaceNotFoundError } from "../errors/index.js"
@@ -62,9 +63,13 @@ export async function installComponents(
     await updateConfig(item, config)
     
     // Update manifest
+    const parsed = parseRegistryItem(item.name)
+    const firstRegistryKey = config.registries ? Object.keys(config.registries)[0] : undefined
+    const defaultRegistry = firstRegistryKey || "@shadcn"
+    
     await manifestManager.addComponent(item.name, {
-      registry: "@shadcn", // Hardcoded for now
-      package: currentPkgName,
+      registry: parsed.registry || defaultRegistry,
+      package: currentPkgName || "unknown",
       path: cwd,
       installedAt: new Date().toISOString()
     })
