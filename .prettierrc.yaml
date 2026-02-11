@@ -1,5 +1,0 @@
-plugins:
-  - prettier-plugin-packagejson
-  - '@stzhu/prettier-plugin-tsconfig'
-singleQuote: true
-trailingComma: all

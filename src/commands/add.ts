@@ -20,7 +20,7 @@ export default class Add extends Command {
     this.log(
       `hello ${name} from /Users/stevezhu/Development/shadcn-installer-project/shadcn-installer/src/commands/add.ts`,
     );
-    if (args.file && flags.force) {
+    if (args.file !== undefined && flags.force) {
       this.log(`you input --force and --file: ${args.file}`);
     }
   }

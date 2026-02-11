@@ -3,11 +3,14 @@
   "version": "0.1.0",
   "description": "Enhanced tooling for shadcn/ui with improved monorepo support",
   "keywords": [
-    "shadcn/ui",
-    "monorepo"
+    "monorepo",
+    "shadcn/ui"
   ],
   "license": "MIT",
   "author": "Steve Zhu <4130171+stevezhu@users.noreply.github.com>",
+  "bin": {
+    "shadcn-installer": "./bin/run.js"
+  },
   "type": "module",
   "exports": {
     ".": {
@@ -21,14 +24,13 @@
       }
     }
   },
-  "bin": {
-    "shadcn-installer": "./bin/run.js"
-  },
   "scripts": {
     "build": "tsdown",
     "dev": "./bin/dev.js",
     "fmt": "oxfmt",
     "fmt:check": "oxfmt --check",
+    "lint": "pnpm run fmt:check && oxlint --type-aware --type-check",
+    "lint:fix": "pnpm run fmt && oxlint --type-aware --fix",
     "test": "tsc --noEmit",
     "watch": "tsdown --watch"
   },
@@ -39,13 +41,16 @@
     "@stzhu/tsconfig": "^0.1.1",
     "@types/node": "^25.2.3",
     "oxfmt": "^0.31.0",
+    "oxlint": "^1.46.0",
+    "oxlint-tsgolint": "^0.11.5",
     "ts-node": "^10.9.2",
     "tsdown": "^0.20.3",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "ultracite": "7.1.5"
   },
-  "packageManager": "pnpm@10.29.1",
   "engines": {
     "node": ">=20",
     "pnpm": ">=10"
-  }
+  },
+  "packageManager": "pnpm@10.29.1"
 }
