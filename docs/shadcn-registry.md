@@ -103,3 +103,28 @@ Based on `SPEC.md`, the enhanced installer aims to provide:
    - The installer checks the manifest to find `B`.
    - If `B` is in `packages/pkg-b`, it adds `@workspace/pkg-b` to `packages/pkg-a/package.json`.
 4. **Clean Organization**: Encourages keeping registries in their own packages (e.g., `packages/shadcn`, `packages/magicui`).
+
+## References
+
+### Key Files in `shadcn-ui/ui` Repository
+
+- **Namespace & URL Resolution**:
+  - `packages/shadcn/src/registry/parser.ts`: Regex patterns for namespace parsing.
+  - `packages/shadcn/src/registry/builder.ts`: Logic for constructing URLs and headers from registry config.
+- **Dependency Resolution**:
+  - `packages/shadcn/src/registry/resolver.ts`: Implementation of `resolveRegistryTree` and topological sorting.
+  - `packages/shadcn/src/registry/fetcher.ts`: Network and local file fetching logic with caching.
+- **Data Models & Validation**:
+  - `packages/shadcn/src/registry/schema.ts`: Zod schemas for registry items and configs.
+- **Registry Build**:
+  - `packages/shadcn/src/commands/registry/build.ts`: CLI command for building a registry.
+  - `packages/shadcn/src/registry/utils.ts`: Contains `recursivelyResolveFileImports` for AST-based dependency discovery.
+
+### Official Documentation
+
+- [Registry Introduction](https://ui.shadcn.com/docs/registry)
+- [Getting Started](https://ui.shadcn.com/docs/registry/getting-started)
+- [Registry JSON Schema](https://ui.shadcn.com/docs/registry/registry-json)
+- [Namespaces & Configuration](https://ui.shadcn.com/docs/registry/namespace)
+- [Authentication](https://ui.shadcn.com/docs/registry/authentication)
+- [Examples & Universal Items](https://ui.shadcn.com/docs/registry/examples)
