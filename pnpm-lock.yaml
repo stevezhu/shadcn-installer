@@ -16,8 +16,8 @@ importers:
         specifier: ^0.6.1
         version: 0.6.1(prettier@3.6.2)
       '@stzhu/tsconfig':
-        specifier: ^0.1.0
-        version: 0.1.0
+        specifier: ^0.5.0
+        version: 0.5.0
       '@types/node':
         specifier: ^22.0.0
         version: 22.18.10
@@ -359,9 +359,9 @@ packages:
     peerDependencies:
       prettier: ^3.x
 
-  '@stzhu/tsconfig@0.1.0':
-    resolution: {integrity: sha512-tY3uzz/Ah4O+rtO1WCLgR1XXFLo9n/vfZj1U6RIBY5oNXmylEGsGIG3YTpsggUB8L7sjzgKctrgOoH4U3ZoEoQ==}
-    engines: {node: '>=18'}
+  '@stzhu/tsconfig@0.5.0':
+    resolution: {integrity: sha512-K9u+8M5hjt+7d0CPpxuEv7ngxD0IaSzjLpiSBpSwRLjQLk1JuHZmCwj/FGBIzMCmOeduWrRHxwJPugnw+IvRaw==}
+    engines: {node: '>=24'}
 
   '@tsconfig/node10@1.0.11':
     resolution: {integrity: sha512-DcRjDCujK/kCk/cUe8Xz8ZSpm8mS3mNNpta+jGCA6USEDfktlNvm1+IuZ9eTcDbNk41BHwpHHeW+N1lKCz4zOw==}
@@ -553,6 +553,7 @@ packages:
 
   glob@10.4.5:
     resolution: {integrity: sha512-7Bv8RF0k6xjo7d4A/PxYLbUCfb6c+Vpd2/mB2yRDlew7Jb5hEXiCD9ibfO7wpk8i4sevK6DFny9h7EYbM3/sHg==}
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
     hasBin: true
 
   has-flag@4.0.0:
@@ -1101,7 +1102,7 @@ snapshots:
       '@babel/types': 7.28.4
       prettier: 3.6.2
 
-  '@stzhu/tsconfig@0.1.0': {}
+  '@stzhu/tsconfig@0.5.0': {}
 
   '@tsconfig/node10@1.0.11': {}
 
