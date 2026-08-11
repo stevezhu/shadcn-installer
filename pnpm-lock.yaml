@@ -13,8 +13,8 @@ importers:
         version: 4.5.6
     devDependencies:
       '@stzhu/prettier-plugin-tsconfig':
-        specifier: ^0.6.1
-        version: 0.6.1(prettier@3.6.2)
+        specifier: ^0.7.0
+        version: 0.7.4(prettier@3.6.2)
       '@stzhu/tsconfig':
         specifier: ^0.1.0
         version: 0.1.0
@@ -39,16 +39,16 @@ importers:
 
 packages:
 
-  '@babel/helper-string-parser@7.27.1':
-    resolution: {integrity: sha512-qMlSxKbpRlAridDExk92nSobyDdpPijUq2DW6oDnUqd0iOGxmQjyqhMIihI9+zv4LPyZdRje2cavWPbCbWm3eA==}
+  '@babel/helper-string-parser@7.29.7':
+    resolution: {integrity: sha512-Pb5ijPrZ89GDH8223L4UP8i6QApWxs04RbPQJTeWDV0/keR2E36MeKnyr6LYmUUvqRRI+Iv87SuF1W6ErINzYw==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/helper-validator-identifier@7.27.1':
-    resolution: {integrity: sha512-D2hP9eA+Sqx1kBZgzxZh0y1trbuU+JoDkiEwqhQ36nodYqJwyEIhPSdMNd7lOm/4io72luTPWH20Yda0xOuUow==}
+  '@babel/helper-validator-identifier@7.29.7':
+    resolution: {integrity: sha512-qehxGkRj55h/ff8EMaJ+cYhyaKlHIxqYDn682wQD7RNp9UujOQsHog2uS0r2vzr4pW+sXf90NeeayjcNaX3fFg==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/types@7.28.4':
-    resolution: {integrity: sha512-bkFqkLhh3pMBUQQkpVgWDWq/lqzc2678eUyDlTBhRqhCHFguYYGM0Efga7tYk4TogG/3x0EEl66/OQ+WGbWB/Q==}
+  '@babel/types@7.29.8':
+    resolution: {integrity: sha512-Vj1jF3cPfxg7OAfoI7QnVKLoILlm2JF9pnVHrX8qx7AHMiYWT+NDAA7jChlNgRS4WTLc/fD1lXLmPixluj+3Gg==}
     engines: {node: '>=6.9.0'}
 
   '@cspotcode/source-map-support@0.8.1':
@@ -353,9 +353,9 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@stzhu/prettier-plugin-tsconfig@0.6.1':
-    resolution: {integrity: sha512-RNc1pFUgLdH3eA9bKyg/8Hh+m/BpRt1ikxU0pZbtoedytd58L9mhsKf5MKMeRnKIg+dlrvHGMZapzQWrJSFFlw==}
-    engines: {node: '>=20'}
+  '@stzhu/prettier-plugin-tsconfig@0.7.4':
+    resolution: {integrity: sha512-/cpb40DWUgFim5hGhuXLUK9I5ln3tDGInf63nNe9HqCcNRZV6uv2rslGg0X00vTLGQi9y8YeHeXHcsy+cOoVUA==}
+    engines: {node: '>=24'}
     peerDependencies:
       prettier: ^3.x
 
@@ -553,6 +553,7 @@ packages:
 
   glob@10.4.5:
     resolution: {integrity: sha512-7Bv8RF0k6xjo7d4A/PxYLbUCfb6c+Vpd2/mB2yRDlew7Jb5hEXiCD9ibfO7wpk8i4sevK6DFny9h7EYbM3/sHg==}
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
     hasBin: true
 
   has-flag@4.0.0:
@@ -885,14 +886,14 @@ packages:
 
 snapshots:
 
-  '@babel/helper-string-parser@7.27.1': {}
+  '@babel/helper-string-parser@7.29.7': {}
 
-  '@babel/helper-validator-identifier@7.27.1': {}
+  '@babel/helper-validator-identifier@7.29.7': {}
 
-  '@babel/types@7.28.4':
+  '@babel/types@7.29.8':
     dependencies:
-      '@babel/helper-string-parser': 7.27.1
-      '@babel/helper-validator-identifier': 7.27.1
+      '@babel/helper-string-parser': 7.29.7
+      '@babel/helper-validator-identifier': 7.29.7
 
   '@cspotcode/source-map-support@0.8.1':
     dependencies:
@@ -1096,9 +1097,9 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.52.4':
     optional: true
 
-  '@stzhu/prettier-plugin-tsconfig@0.6.1(prettier@3.6.2)':
+  '@stzhu/prettier-plugin-tsconfig@0.7.4(prettier@3.6.2)':
     dependencies:
-      '@babel/types': 7.28.4
+      '@babel/types': 7.29.8
       prettier: 3.6.2
 
   '@stzhu/tsconfig@0.1.0': {}
