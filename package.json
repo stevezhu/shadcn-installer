@@ -36,7 +36,7 @@
     "@oclif/core": "^4.5.6"
   },
   "devDependencies": {
-    "@stzhu/prettier-plugin-tsconfig": "^0.6.1",
+    "@stzhu/prettier-plugin-tsconfig": "^0.7.0",
     "@stzhu/tsconfig": "^0.1.0",
     "@types/node": "^22.0.0",
     "prettier": "^3.6.2",
